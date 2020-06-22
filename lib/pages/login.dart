@@ -1,5 +1,8 @@
+import 'package:digital_helper/api/api.dart';
 import 'package:digital_helper/utils/custom_widgets.dart';
 import 'package:flutter/material.dart';
+
+import 'home.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -10,6 +13,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  String errorMsg = '';
 
   @override
   void dispose() {
@@ -71,19 +75,50 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                     StartButton(
-                      onBtnPressed: () {},
+                      onBtnPressed: () async {
+                        if (_formKey.currentState.validate()) {
+                          var email = emailController.text;
+                          var password = passwordController.text;
+                          setState(() {
+                            errorMsg = 'Patientez...';
+                          });
+                          var rep = await getLoginUser(email, password);
+                          print(rep);
+                          if (rep.containsKey('status')) {
+                            setState(() {
+                              errorMsg = rep['status_text'];
+                              if (rep['status'] == 1) {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return HomePage(username: rep['user_arr']['email']);
+                                }));
+                              } else {
+                                setState(() {
+                                  errorMsg = 'Login Failed';
+                                });
+                              }
+                            });
+                          }
+                        }
+                      },
                       id: 1,
                       btnText: "Connexion",
                     ),
-                    SizedBox(height: 10),
+                    Text(errorMsg),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        SocialIcon(iconName: 'assets/facebook.png',),
+                        SocialIcon(
+                          iconName: 'assets/facebook.png',
+                        ),
                         SizedBox(width: 10),
-                        SocialIcon(iconName: 'assets/twitter.png',),
+                        SocialIcon(
+                          iconName: 'assets/twitter.png',
+                        ),
                         SizedBox(width: 10),
-                        SocialIcon(iconName: 'assets/instagram.png',),
+                        SocialIcon(
+                          iconName: 'assets/instagram.png',
+                        ),
                         SizedBox(width: 10),
                       ],
                     ),
