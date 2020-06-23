@@ -1,4 +1,4 @@
-import 'package:digital_helper/utils/custom_widgets.dart';
+import 'package:digital_helper/Utils/custom_widgets.dart';
 import 'package:flutter/material.dart';
 
 import 'login.dart';
@@ -41,7 +41,8 @@ class IntroPage extends StatelessWidget {
                       },
                     )
                   ],
-                )),
+                )
+            ),
           ),
         ],
       ),
