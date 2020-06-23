@@ -1,4 +1,5 @@
 import 'package:digital_helper/api/api.dart';
+import 'package:digital_helper/pages/registration.dart';
 import 'package:digital_helper/utils/custom_widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   String errorMsg = '';
+  Color txtColor = Colors.white;
 
   @override
   void dispose() {
@@ -33,6 +35,7 @@ class _LoginPageState extends State<LoginPage> {
         MainLogo(
           imgHeight: MediaQuery.of(context).size.height * 0.35,
         ),
+        Text(errorMsg, style: TextStyle(color: txtColor),),
         Expanded(
             child: ListView(
           children: <Widget>[
@@ -44,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: <Widget>[
                     CustomControllerTextField(
                       fieldText: "Email",
-                      validatorText: "Entrez un email valide",
+                      validatorText: "Entrez une adresse mail valide.",
                       myController: emailController,
                     ),
                     SizedBox(
@@ -56,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                       myController: passwordController,
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 5,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -70,7 +73,12 @@ class _LoginPageState extends State<LoginPage> {
                               color: Theme.of(context).primaryColor,
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return RegistrationPage();
+                            }));
+                          },
                         ),
                       ],
                     ),
@@ -80,6 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                           var email = emailController.text;
                           var password = passwordController.text;
                           setState(() {
+                            txtColor = Colors.white;
                             errorMsg = 'Patientez...';
                           });
                           var rep = await getLoginUser(email, password);
@@ -88,13 +97,18 @@ class _LoginPageState extends State<LoginPage> {
                             setState(() {
                               errorMsg = rep['status_text'];
                               if (rep['status'] == 1) {
+                                setState(() {
+                                  txtColor = Colors.green;
+                                  errorMsg = "Connexion réussie!";
+                                });
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
                                   return HomePage(username: rep['user_arr']['email']);
                                 }));
                               } else {
                                 setState(() {
-                                  errorMsg = 'Login Failed';
+                                  txtColor = Colors.red;
+                                  errorMsg = 'Identifiant ou mot de passe incorrect';
                                 });
                               }
                             });
@@ -104,7 +118,9 @@ class _LoginPageState extends State<LoginPage> {
                       id: 1,
                       btnText: "Connexion",
                     ),
-                    Text(errorMsg),
+                    SizedBox(
+                      height: 5,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
