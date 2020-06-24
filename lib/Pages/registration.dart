@@ -10,7 +10,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final _formKey = GlobalKey<FormState>();
   // final List<String> _array = ['1', '2'];
   List<TextEditingController> _controller =
-      List.generate(6, (i) => TextEditingController());
+      List.generate(7, (i) => TextEditingController());
   String errorMsg = '';
 
   Color txtColor = Colors.white;
