@@ -218,13 +218,21 @@ class _CustomTextFieldArrayState extends State<CustomTextFieldArray> {
   }
 }
 
-class CustomDescriptionGetter extends StatelessWidget {
+class CustomDescriptionGetter extends StatefulWidget {
   final bool isProfile;
   final TextEditingController controller;
   CustomDescriptionGetter({this.isProfile, this.controller});
+
+  @override
+  _CustomDescriptionGetterState createState() =>
+      _CustomDescriptionGetterState();
+}
+
+class _CustomDescriptionGetterState extends State<CustomDescriptionGetter> {
+  static String myValue = "Informatique";
   @override
   Widget build(BuildContext context) {
-    if (isProfile == true)
+    if (widget.isProfile == true)
       return SizedBox(height: 0);
     else
       return Column(children: <Widget>[
@@ -240,10 +248,45 @@ class CustomDescriptionGetter extends StatelessWidget {
                   color: Theme.of(context).primaryColor)),
         ),
         SizedBox(height: 10),
+        Padding(
+          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+          child: Container(
+            color: Colors.grey[800],
+            width: MediaQuery.of(context).size.width,
+            child: DropdownButton<String>(
+                value: myValue,
+                underline: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 1,
+                  color: Colors.transparent,
+                ),
+                items: <String>[
+                  'Informatique',
+                  'Commerce',
+                  'Sciences',
+                  'Aviation',
+                  'Sport',
+                  'Seduction',
+                  'Comptabilité',
+                  'Management'
+                ].map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Center(child: Text(value)),
+                  );
+                }).toList(),
+                onChanged: (String newValue) {
+                  setState(() {
+                    myValue = newValue;
+                  });
+                }),
+          ),
+        ),
+        SizedBox(height: 10),
         CustomInfiniteTextField(
           fieldText: "Description",
           validatorText: "Entrez une description",
-          myController: controller,
+          myController: widget.controller,
         ),
       ]);
   }
@@ -308,7 +351,7 @@ class _CustomRegistrationFormState extends State<CustomRegistrationForm> {
         myController: widget.controller[5],
       ),
       SizedBox(height: 15),
-            CustomDescriptionGetter(
+      CustomDescriptionGetter(
           controller: widget.controller[6], isProfile: isProfile),
       Text("Type de profile",
           style: TextStyle(
@@ -323,29 +366,34 @@ class _CustomRegistrationFormState extends State<CustomRegistrationForm> {
           color: Colors.grey[800],
           width: MediaQuery.of(context).size.width,
           child: DropdownButton<String>(
-            value: myValue,
-            underline: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 1,
-              color: Colors.transparent,
-            ),
-            items: <String>['Aspirant', 'Coach'].map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Center(child: Text(value)),
-              );
-            }).toList(),
-            onChanged: (String newValue) {
-              setState(() {
-                if (newValue == "Aspirant")
-                  isProfile = true;
-                else
-                  isProfile = false;
-                myValue = newValue;
-              });
-            },
-          ),
+              value: myValue,
+              underline: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 1,
+                color: Colors.transparent,
+              ),
+              items: <String>['Aspirant', 'Coach'].map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Center(child: Text(value)),
+                );
+              }).toList(),
+              onChanged: (String newValue) {
+                setState(() {
+                  if (newValue == "Aspirant")
+                    isProfile = true;
+                  else
+                    isProfile = false;
+                  myValue = newValue;
+                });
+              }),
         ),
+      ),
+      SizedBox(height: 15),
+      StartButton(
+        id: 1,
+        btnText: "Confirmer inscription",
+        onBtnPressed: () async {},
       ),
     ]);
   }
